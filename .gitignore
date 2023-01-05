@@ -51,6 +51,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Will's ignore stuff
+__test.py
+
 # Translations
 *.mo
 *.pot

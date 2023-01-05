@@ -16,7 +16,7 @@ off my case already.
 TODO Updated 20230104_0611
 PRE:
     - Do a structural analysis to see which anchors in the group
-     are actually loaded in tension... etc...
+     are actually loaded in tension... etc... ✔ done! 20230105_1540
 
 INPUT:
     - Include cracked/uncracked designation.  The program currently conservatively
@@ -26,7 +26,7 @@ INPUT:
 
 OUTPUT:
     - V, N interaction diagram
-    - create a nicer input graphic
+    - create a nicer input graphic ]done.
 
 """
 
@@ -35,6 +35,7 @@ import numpy as np
 import math
 import tkinter as tk
 from tkinter import ttk
+from PIL import Image, ImageTk
 # from tkinter import messagebox
 # from PIL import Image, ImageTk
 # import datetime
@@ -449,6 +450,9 @@ def click_button():
     out_Ix.set(numfmt.format(Ix))
     out_Iy.set(numfmt.format(Iy))
     out_Ip.set(numfmt.format(Ip))
+    out_TxFZ.set(numfmt.format(FZ / (nx*ny)))
+    out_TxMY.set(numfmt.format(Tcr_x - FZ / (nx*ny)))
+    out_TX.set(numfmt.format(Tcr_x))
 
         
     # Calculate concrete properties
@@ -524,7 +528,7 @@ def click_button():
 # Instantiate the global object, window
 window = tk.Tk()
 window.title('Analysis of Post-Installed Anchors')
-window.geometry("1040x860")
+window.geometry("1040x900")
 window.iconbitmap(r"images\Will-High.ico")
 
 # Define the notebook for tabs
@@ -610,7 +614,12 @@ LFG.
 tk.Label(tab1,text='Let\'s Do This, Ace.',font=large).grid(row=row,column=col,sticky="NW")
 row =+ 1
 
-
+# Helper graphic
+image = Image.open(r'images\anchorgrp.PNG')
+img = image.resize((435,365))
+my_img=ImageTk.PhotoImage(img)
+lpic1 = tk.Label(tab1,image=my_img)
+lpic1.grid(row=0,column=3,rowspan=10)
 
 
 # Anchor Diameter Input
@@ -911,6 +920,7 @@ tk.Label(tab3,text='Governing Tension (kip) =',font=medium).grid(row=row,column=
 col +=1
 tk.Entry(tab3,textvariable=out_TX,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
 row += 1    ;   col -= 1
+# Set some other variables
 
 
 

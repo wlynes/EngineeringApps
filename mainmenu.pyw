@@ -5,25 +5,25 @@ import subprocess
 
 def script1():
     # subprocess.run(["startupconverter.exe"])
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\FeetInches.py"],
+    subprocess.Popen(["python","FeetInches.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script2():
     # subprocess.run(["concprops.exe"])
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\concprops.py"],
+    subprocess.Popen(["python","concprops.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script3():
     # subprocess.run(["anchorbolts.exe"])
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\anchorboltreax.py"],
+    subprocess.Popen(["python","anchorboltreax.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script4():
     # subprocess.run(["aisclookup.exe"])
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\aisclookup.py"],
+    subprocess.Popen(["python","aisclookup.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script5():
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\RC_Interaction.py"],
+    subprocess.Popen(["python","RC_Interaction.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script6():
-    subprocess.Popen([r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python",r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\anchors_aci-ch17.py"],
+    subprocess.Popen(["python","anchors_aci-ch17.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 
 fs = ('Helvetica',16)

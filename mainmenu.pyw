@@ -23,7 +23,7 @@ def script5():
     subprocess.Popen(["python","RC_Interaction.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 def script6():
-    subprocess.Popen(["python","anchors_aci-ch17.py"],
+    subprocess.Popen(["python","anchors.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
 
 fs = ('Helvetica',16)

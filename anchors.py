@@ -9,19 +9,19 @@ Updates as of the time I remembered to make this:
 20230104_1940:  The goal is to create an additional
 tab showing the Structural Analysis 
 
+20230106_1152: Fix stuff.  Analysis button doesn't
+work when calling from main menu program.  
+Previously fucked around with scrollbars and shit; 
+found out that it broke the shit outta my program.
+
 See ACI 318-19 Ch. 17 for more information.  Get
 off my case already.
 
 
 TODO Updated 20230104_0611
 PRE:
-    - Do a structural analysis to see which anchors in the group
-     are actually loaded in tension... etc... ✔ done! 20230105_1540
 
 INPUT:
-    - Include cracked/uncracked designation.  The program currently conservatively
-      assumes cracked sections
-    - Include Steel type:  ductile or brittle.  Program assumes ductile
     - Include critical distances per § 17.9
 
 OUTPUT:
@@ -36,8 +36,7 @@ import math
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-# from tkinter import messagebox
-# from PIL import Image, ImageTk
+from tkinter import messagebox
 # import datetime
 # import os
 
@@ -293,30 +292,35 @@ class anchorgroup():
         self.Ly = (ny - 1) * s2 # Length of group along Y axis
 
         # The origin (0,0) is placed arbitrarily at the bottom left anchor center point
-        # Calculate the x coordinates of the columns and the y coordinates of the rows
-        self.xcoords = [s1*i for i in range(nx)]
-        self.ycoords = [s2*i for i in range(ny)]
-        self.xc = (self.xcoords[-1] - self.xcoords[0]) / 2
-        self.yc = (self.ycoords[-1] - self.ycoords[0]) / 2
+        # Calculate the coordinates of all anchors and play with 'em
+        self.coords = []
+
+        for j in range(ny):
+            for i in range(nx):
+                _x = i * s1
+                _y = j * s2
+                self.coords.append((_x, _y))
+
+        # Extract all x and y coordinates as lists and find the centroids
+        self.xcoords = [i[0] for i in list(self.coords)]
+        self.ycoords = [i[1] for i in list(self.coords)]
+        self.xc = sum(self.xcoords) / len(self.xcoords)
+        self.yc = sum(self.ycoords) / len(self.ycoords)
    
     def calc_I(self):
-        # Initialize Ix and Iy
-        Ix = 0. ;   Iy = 0.
+        Il = lambda d: math.pi/64 * self.da**4 + self.Ab * d**2
+
+        # Iterate through the rows then columns to calculate the
+        # moments of inertia.
+
+        Ix:float = 0.
+        Iy:float = 0.
         
-        # I0 of a circle
-        I0c = math.pi / 64 * self.da**4
-        
-        # About the x-x axis (north-south rotation, MX)
-        for i in range(self.ny):
-            y = self.ycoords[i]
-            d = y - self.yc
-            Ix += self.nx * (I0c + self.Ab * d**2)
-        
-        # About the y-y axis (east-west rotation, MY)
-        for i in range(self.nx):
-            x = self.xcoords[i]
-            d = x - self.xc
-            Iy += self.ny * (I0c + self.Ab * d**2)
+        # Ix
+        for i, c in enumerate(self.coords):
+            _dx = c[0]-self.xc   ;   _dy = c[1]-self.yc
+            Ix += Il(_dy)
+            Iy += Il(_dx)
 
         # About the z axis (polar)
         Ip = Ix + Iy
@@ -450,9 +454,19 @@ def click_button():
     out_Ix.set(numfmt.format(Ix))
     out_Iy.set(numfmt.format(Iy))
     out_Ip.set(numfmt.format(Ip))
+
     out_TxFZ.set(numfmt.format(FZ / (nx*ny)))
     out_TxMY.set(numfmt.format(Tcr_x - FZ / (nx*ny)))
     out_TX.set(numfmt.format(Tcr_x))
+
+    out_TyFZ.set(numfmt.format(FZ / (nx*ny)))
+    out_TyMX.set(numfmt.format(Tcr_y - FZ / (nx*ny)))
+    out_TY.set(numfmt.format(Tcr_y))
+
+    out_VFX.set(numfmt.format(FX / (nx*ny)))
+    out_VFY.set(numfmt.format(FY / (nx*ny)))
+    out_VMZ.set(numfmt.format(Vcr_xy - math.sqrt(FX**2 + FY**2)/(nx*ny)))
+    out_VXY.set(numfmt.format(Vcr_xy))
 
         
     # Calculate concrete properties
@@ -580,11 +594,11 @@ CRITICAL SPACING
 
 """
 # Define text sizes
-large = ('Arial',14,"bold")
-medium = ('Arial',12)
-medbold = ('Arial',12,"bold")
-small = ('Arial',10)
-vsmall = ('Arial',8)
+large = ('Arial',12,"bold")
+medium = ('Arial',10)
+medbold = ('Arial',10,"bold")
+small = ('Arial',8)
+vsmall = ('Arial',6)
 
 # Define the starting row/column of the grid
 row = 0    ;   col = 0
@@ -616,7 +630,7 @@ row =+ 1
 
 # Helper graphic
 image = Image.open(r'images\anchorgrp.PNG')
-img = image.resize((435,365))
+img = image.resize((365,305))
 my_img=ImageTk.PhotoImage(img)
 lpic1 = tk.Label(tab1,image=my_img)
 lpic1.grid(row=0,column=3,rowspan=10)
@@ -920,8 +934,57 @@ tk.Label(tab3,text='Governing Tension (kip) =',font=medium).grid(row=row,column=
 col +=1
 tk.Entry(tab3,textvariable=out_TX,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
 row += 1    ;   col -= 1
-# Set some other variables
 
+# Y-Y Direction
+# Declare variables
+out_TyFZ = tk.StringVar()
+out_TyMX = tk.StringVar()
+out_TY = tk.StringVar()
+
+tk.Label(tab3,text='Tension, Y-Y Axis',font=medbold).grid(row=row,column=col,sticky="NW")
+row += 1
+tk.Label(tab3,text='Uniform Tension Per Anchor from FZ (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_TyFZ,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text='Max. Tension Due to MX (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_TyMX,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text='Governing Tension (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_TY,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text=' ',font=medbold).grid(row=row,column=col,sticky="NW")
+row += 1
+
+# X-Y Shear Plane
+# Declare variables
+out_VFX = tk.StringVar()
+out_VFY = tk.StringVar()
+out_VMZ = tk.StringVar()
+out_VXY = tk.StringVar()
+
+tk.Label(tab3,text='Shear, X-Y Plane',font=medbold).grid(row=row,column=col,sticky="NW")
+row += 1
+tk.Label(tab3,text='Uniform Shear Per Anchor from FX (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_VFX,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text='Uniform Shear Per Anchor from FY (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_VFY,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text='Shear in Critical Anchor from MZ (kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_VMZ,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text='Governing Shear in Critical Anchor(kip) =',font=medium).grid(row=row,column=col,sticky="NE")
+col +=1
+tk.Entry(tab3,textvariable=out_VXY,font=medium,state="readonly",relief="solid",width=8).grid(row=row,column=col,sticky="NW")
+row += 1    ;   col -= 1
+tk.Label(tab3,text=' ',font=medbold).grid(row=row,column=col,sticky="NW")
+row += 1
 
 
 

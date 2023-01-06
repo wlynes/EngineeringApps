@@ -287,7 +287,7 @@ window.title('Interaction Diagrams for R.C. Columns v0.1')
 window.geometry("1040x800")
 window.iconbitmap(r"images\Will-High.ico")
 
-# Define two text styles
+# Define two text styles.  Whoops, I did three.  Jerk turkey.
 font1 = ('Arial',14)
 font2 = ('Arial',12)
 font3 = ('Arial',10)
@@ -302,6 +302,9 @@ title001.grid(row=0,column=0,columnspan=2,sticky="NW")
 tk.Label(window,text="  ",font=font1).grid(row=0,column=2)
 tk.Label(window,text="  ",font=font1).grid(row=0,column=3)
 tk.Label(window,text="  ",font=font1).grid(row=0,column=4)
+
+# LOL, this was before I did the row, col counters.  Jesus, that might
+# be clunky as shit, but it's way more flexible than this shit.
 
 title002 = tk.Label(window, text='Enter ASD Axial Force and Bending Moment', font=font1)
 title002.grid(row=0,column=5,sticky="NW")

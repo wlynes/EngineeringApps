@@ -25,13 +25,16 @@ def script5():
 def script6():
     subprocess.Popen(["python","anchors.py"],
                       creationflags=subprocess.CREATE_NO_WINDOW)
+def script7():
+    subprocess.Popen(["python","syncdirs.py"],
+                      creationflags=subprocess.CREATE_NO_WINDOW)
 
 fs = ('Helvetica',16)
 
 # Create the main window
 root = tk.Tk()
 root.title("Remote")
-root.geometry("225x395")
+root.geometry("225x500")
 # root.iconbitmap(r"C:\Users\wlynes\OneDrive - high.net\Templates\Icons\Will-High.ico")
 root.iconbitmap("images\Will-High.ico")
 
@@ -53,6 +56,9 @@ button2.pack()
 
 button5 = tk.Button(root, text="RC Interaction", command=script5,height=2,width=20,font=fs)
 button5.pack()
+
+button7 = tk.Button(root, text="Sync Folders", command=script7,height=2,width=20,font=fs)
+button7.pack()
 
 # Run the main loop
 root.mainloop()

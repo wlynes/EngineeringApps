@@ -7,56 +7,66 @@ from contextlib import redirect_stdout
 import os
 from datetime import datetime
 
-window = tk.Tk()
-window.title('Folder Sync\'r \'n Litter Gitt\'r')
-window.geometry('400x200')
-window.iconbitmap("images\Will-High.ico")
-color2 = '#000000' # black
-color1 = "#3D7A97" # Steel Manual Blue
-f = ('Arial', 14)
-window.tk_setPalette(background=color1, foreground=color2)
+class App():
+    """The application object
+    """
+    def __init__(self, master):
+        """Initializes the App object
 
-# rfpath = lambda: rf'{filedialog.askdirectory()}'
-sauce = tk.StringVar()
-destiny = tk.StringVar()
+        Args:
+            master (tk Object): The window object
+        """
+        self.master = master
+        self.sauce = tk.StringVar()
+        self.destiny = tk.StringVar()
+        self.init_widgets()
+        
+    def init_widgets(self):
+        """Initializes the widgets upon calling the App object
+        """
+        self.master.title("Folder Sync\'r \'n Litter Gitt\'r")
+        self.master.geometry('400x200')
+        self.master.iconbitmap("images\Will-High.ico")
+        self.color1 = "#3D7A97" # Steel Manual Blue
+        self.color2 = '#000000' # black
+        self.f = ('Arial', 14)
+        self.master.tk_setPalette(background=self.color1, foreground=self.color2)
+     
+        # Buttons
+        tk.Button(self.master,text="Select SOURCE Folder",command=self.clickSource,font=self.f).pack(expand=True,fill='both')
+        tk.Entry(self.master,textvariable=self.sauce,font=self.f,background=self.color2,foreground=self.color1).pack(expand=True,fill='both')
+        tk.Button(self.master,text="Select DESTINATION Folder",command=self.clickDestination,font=self.f).pack(expand=True,fill='both')
+        tk.Entry(self.master,textvariable=self.destiny,background=self.color2,foreground=self.color1,font=self.f).pack(expand=True,fill='both')
+        tk.Button(self.master,text="DO IT!",command=self.doIt,font=self.f).pack(side='bottom',expand=True,fill='both')
 
-def clickSource():
-    theway = rf'{filedialog.askdirectory()}'
-    sauce.set(theway)
+    def clickSource(self):
+        self.theway = rf'{filedialog.askdirectory()}'
+        self.sauce.set(self.theway)
+    
+    def clickDestination(self):
+        self.theway2 = rf'{filedialog.askdirectory()}'
+        self.destiny.set(self.theway2)
 
-def clickDestination():
-    theway2 = rf'{filedialog.askdirectory()}'
-    destiny.set(theway2)
+    def doIt(self):
+        _sauce = self.sauce.get()
+        _destiny = self.destiny.get()
+        
+        # Create a text file name
+        self.outpath = _destiny
+        self.username = os.getlogin()
+        self.now = datetime.now().strftime('%Y-%m-%d_%H%M%S')
+        self.outname = self.outpath + "/" + "LAST UPDATED_" + self.now + '_' + self.username + '.txt'
+        self.newfilename = rf'{self.outname}'
 
-def doIt():
-    _sauce = sauce.get()
-    _destiny = destiny.get()
-      
+        with open(self.newfilename, 'w') as filzz:
+            with redirect_stdout(filzz):
+                sync(_sauce,_destiny,'sync',purge=True,verbose=False)
 
-    # Create a text file name
-    outpath = _destiny
-    username = os.getlogin()
-    now = datetime.now().strftime('%Y-%m-%d_%H%M%S')
-    outname = outpath + "/" + "__UPDATE_" + now + '_' + username + '.txt'
-    newfilename = rf'{outname}'
+        messagebox.showinfo(title='Success!',message='Aww yeah, keepin\' it fresh.\nKeepin\' it real.')
 
-    with open(newfilename, 'w') as filzz:
-        with redirect_stdout(filzz):
-            sync(_sauce,_destiny,'sync',purge=True,verbose=True)
+def main():
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()
 
-    messagebox.showinfo(title='Success!',message='Aww yeah, keepin\' it fresh.\nKeepin\' it real.')
-
-
-
-
-
-tk.Button(window,text="Select SOURCE Folder",command=clickSource,font=f).pack(expand=True,fill='both')
-tk.Entry(window,textvariable=sauce,font=f,background=color2,foreground=color1).pack(expand=True,fill='both')
-tk.Button(window,text="Select DESTINATION Folder",command=clickDestination,font=f).pack(expand=True,fill='both')
-tk.Entry(window,textvariable=destiny,background=color2,foreground=color1,font=f).pack(expand=True,fill='both')
-tk.Button(window,text="DO IT!",command=doIt,font=f).pack(side='bottom',expand=True,fill='both')
-
-
-
-window.mainloop()
-
+main()

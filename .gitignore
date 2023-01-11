@@ -155,3 +155,4 @@ cython_debug/
 #.idea/
 syncdirs copy.py
 FeetInches copy.py
+_testing.py

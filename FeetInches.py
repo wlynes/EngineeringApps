@@ -3,22 +3,43 @@ from tkinter import ttk
 import re
 from fractions import Fraction
 import math
+from tkinter import messagebox
 
 
+def feet_and_inches_string_formats():
+  # Some valid input strings
+  _strFormats = [r"(\d+)\'-(\d+)\s(\d+)/(\d+)\"", # a'-b c/d" (default)
+                r"(\d+)\'\s(\d+)\s(\d+)/(\d+)\"", # a' b c/d" (without the dash)
+                r"(\d+)-(\d+)\s(\d+)/(\d+)", # a-b c/d (default without ' " marks)
+                r"(\d+)\s(\d+)\s(\d+)\s(\d+)", # a b c/d (without - ' " marks)
+                r"(\d+)\'-(\d+)\"", # a'-b" (whole inches only)]
+                r"(\d+)-(\d+)", # a-b (whole inches without ' " marks)
+                r"(\d+)\s(\d+)"] # a-b (whole inches without ' " marks)
+  return _strFormats
+  
 def feet_and_inches_to_decimal_feet(s):
-    # Use a regular expression to extract the feet, inches, and fraction parts of the string
-    m = re.match(r"(\d+)\'-(\d+)\s(\d+)/(\d+)\"", s)
-    if m:
+    validFormats = feet_and_inches_string_formats()
+    
+    for i, chk in enumerate(validFormats):
+      if m := re.match(chk, s):
         feet = int(m.group(1))
         inches = int(m.group(2))
-        numerator = int(m.group(3))
-        denominator = int(m.group(4))
+        if chk in validFormats[-3:]:
+            numerator = 0
+            denominator = 1
+        else:
+            numerator = int(m.group(3))
+            denominator = int(m.group(4))
+            # Convert the fraction to a decimal value and add it to the inches
+    
+    inches += numerator / denominator
 
-        # Convert the fraction to a decimal value and add it to the inches
-        inches += numerator / denominator
+    # Add the feet and inches to get the total distance in decimal feet
+    return feet + inches / 12   
+      
 
-        # Add the feet and inches to get the total distance in decimal feet
-        return feet + inches / 12
+
+
 
 def convert_dectostring():
   # Get the input value and convert it to a float

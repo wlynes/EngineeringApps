@@ -21,6 +21,9 @@ class App:
         self.output = tk.StringVar()
         self.build_window()
 
+        # Bind the Enter key
+        self.root.bind('<Return>', self.enter)
+
     def build_window(self):
         self.root.geometry("480x215")
         self.root.title("Units converter")
@@ -49,20 +52,29 @@ class App:
         # Put it in the box!
         self.output.set(self.cnv)
 
+    def enter(self, event):
+        self.click()
+
 
 def converter_unit_processor(mag, oldu: str, newu: str, env: str = "wjl"):
     # TODO Expand json of unit types.  Structural seems OK for now.
-    fap.environment(env_name=env)
+    fap.environment(env_name=env, top_level=True)
     mag = float(mag)
 
     try:
-        w = mag * eval("fap." + oldu)
+        w = mag * eval(oldu)
+    except NameError:
+        messagebox.showerror(title="Invalid Units",
+                             message=oldu + " not defined")
     except:
         messagebox.showerror(title="Invalid Quantity or Units",
                              message="Make sure to use the unit symbology from the Python package forallpeople.")
 
     try:
         n = w.to(unit_name=newu)
+    except NameError:
+        messagebox.showerror(title="Invalid Units",
+                             message=newu + " not defined")
     except:
         messagebox.showerror(title="Invalid Quantity or Units",
                              message="Make sure to use the unit symbology from the Python package forallpeople.")
@@ -98,6 +110,7 @@ def string_parser(s: str):
 
 def main():
     w = App()
+
     w.root.mainloop()
 
 

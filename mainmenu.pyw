@@ -48,12 +48,17 @@ def script8():
                      creationflags=subprocess.CREATE_NO_WINDOW)
 
 
+def script9():
+    subprocess.Popen(["python", "aiscbyproperty.py"],
+                     creationflags=subprocess.CREATE_NO_WINDOW)
+
+
 fs = ('Helvetica', 16)
 
 # Create the main window
 root = tk.Tk()
 root.title("Remote")
-root.geometry("225x525")
+root.geometry("250x595")
 # root.iconbitmap(r"C:\Users\wlynes\OneDrive - high.net\Templates\Icons\Will-High.ico")
 root.iconbitmap("images\Will-High.ico")
 
@@ -69,6 +74,10 @@ button8.pack(fill="both")
 button4 = tk.Button(root, text="AISC Shapes Lookup",
                     command=script4, height=2, width=20, font=fs)
 button4.pack(fill="both")
+
+button9 = tk.Button(root, text="AISC Shape by Property",
+                    command=script9, height=2, width=20, font=fs)
+button9.pack(fill="both")
 
 button3 = tk.Button(root, text="Anchor Bolt Reactions",
                     command=script3, height=2, width=20, font=fs)

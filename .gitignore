@@ -53,6 +53,11 @@ cover/
 
 # Will's ignore stuff
 __test.py
+_anchors.py
+_test.py
+
+# Batch files
+*.bat
 
 # Translations
 *.mo

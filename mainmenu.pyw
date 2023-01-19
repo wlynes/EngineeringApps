@@ -1,5 +1,3 @@
-#! r"C:\Users\wlynes\Documents\Python\custommenu\Scripts\python"
-
 import tkinter as tk
 import subprocess
 

@@ -3,15 +3,23 @@ from tkinter import messagebox
 import re
 from fractions import Fraction
 import forallpeople as fap
+import os
+import json
 
 
-class Measurement:
-    def __init__(self, environment: str = 'us_customary') -> None:
-        # Default units environments (metric default default)
-        # us_customary, electrical, structural, thermal
-        pass
+# class Measurement:
+#     def __init__(self) -> None:
+#         # Default units environments (metric default default)
+#         # us_customary, electrical, structural, thermal
+#         pass
 
-    # def InputValue(self):
+#     def _CombineEnvs(self):
+#         env_path = r"C:\Python\Lib\site-packages\forallpeople\environments"
+#         for root, dirname, filename in os.walk(env_path):
+#             envs = filename
+
+#         for e in envs:
+#             os.path.join(env_path, e)
 
 
 class App:

@@ -58,7 +58,8 @@ class App:
         self.output.set(self.cnv)
 
 
-def converter_unit_processor(mag, oldu: str, newu: str, env: str = "wjl"):
+def converter_unit_processor(mag, oldu: str, newu: str, env: str = None):
+    env = "structural" if env == None else env
     # TODO Expand json of unit types.  Structural seems OK for now.
     fap.environment(env_name=env)
     mag = float(mag)

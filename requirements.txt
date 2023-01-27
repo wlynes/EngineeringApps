@@ -1,0 +1,6 @@
+sectionproperties==2.1.5
+forallpeople==2.6.6
+handcalcs==1.6.5
+jupyter==1.0.0
+openpyxl==3.0.10
+syncdir==0.2.1

@@ -61,11 +61,11 @@ class App:
 def converter_unit_processor(mag, oldu: str, newu: str, env: str = None):
     env = "structural" if env == None else env
     # TODO Expand json of unit types.  Structural seems OK for now.
-    fap.environment(env_name=env)
+    fap.environment(env_name=env, top_level=True)
     mag = float(mag)
 
     try:
-        w = mag * eval("fap." + oldu)
+        w = mag * eval(oldu)
     except:
         messagebox.showerror(title="Invalid Quantity or Units",
                              message="Make sure to use the unit symbology from the Python package forallpeople.")

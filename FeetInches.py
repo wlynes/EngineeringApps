@@ -147,6 +147,8 @@ output_text = tk.StringVar()
 output_box = tk.Entry(tab2, textvariable=output_text, state="readonly", font=("Helvetica", 16), width=20)
 output_box.pack()
 
+
+
 # Create the convert button
 convert_button = tk.Button(tab2, text="Convert", font=("Helvetica", 16), command=convert_dectostring)
 convert_button.pack()

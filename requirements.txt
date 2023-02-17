@@ -1,6 +1,8 @@
-sectionproperties==2.1.5
+customtkinter==5.1.2
+dirsync==2.2.5
 forallpeople==2.6.6
-handcalcs==1.6.5
-jupyter==1.0.0
-openpyxl==3.0.10
-syncdir==0.2.1
+matplotlib==3.6.3
+numpy==1.24.2
+Pillow==9.4.0
+scipy==1.10.0
+sectionproperties==2.1.5

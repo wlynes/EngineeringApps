@@ -10,6 +10,9 @@ class MainApp(cnt.CTk):
     def __init__(self) -> None:
         super().__init__()
 
+        # Set the venv path
+        self.venv_python = r"venv\Scripts\pythonw"
+
         # self.geometry("240x600")
         self.title("Menu 2.0.0 2023-01-31")
 
@@ -30,7 +33,9 @@ class MainApp(cnt.CTk):
             "Consolas", 24), text="Unit Converter", command=lambda: self.button_click("unitconverter2.py")).pack(fill="both", padx=2, pady=2)
 
     def button_click(self, script):
-        subprocess.Popen(["pythonw", script])
+        _args = [self.venv_python, script]
+        subprocess.run(_args)
+        # subprocess.Popen(["pythonw", script])
 
 
 class TimeAndDateFrame(cnt.CTkFrame):

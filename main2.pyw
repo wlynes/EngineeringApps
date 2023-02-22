@@ -18,6 +18,7 @@ class MainApp(cnt.CTk):
 
         cnt.set_default_color_theme("blue")
         cnt.set_appearance_mode("dark")
+        self.iconbitmap(r"images\Will-High.ico")
 
         tdf = TimeAndDateFrame(master=self).pack(fill="x", padx=2, pady=2)
 

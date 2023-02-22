@@ -30,6 +30,7 @@ class App:
 
     def build_window(self):
         self.root.title("Lookup by Property")
+        ctk.CTk().iconbitmap(r"images\Will-High.ico")
         # self.root.geometry("800x600")
         # self.root.iconbitmap(r"images\Will-High.ico")
         ctk.set_default_color_theme("blue")

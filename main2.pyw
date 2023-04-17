@@ -26,9 +26,13 @@ class MainApp(cnt.CTk):
 
         button1 = cnt.CTkButton(master=self, font=("Consolas", 24), text="f.eet\' to ft'-in\"",
                                 command=lambda: self.button_click("FeetInches2.py")).pack(fill="both", padx=2, pady=2)
-        button2 = cnt.CTkButton(master=self, font=(
-            "Consolas", 24), text="AISC Shapes Lookup", command=lambda: self.button_click("aisclookup2.py")).pack(fill="both", padx=2, pady=2)
+        button2 = cnt.CTkButton(master=self, font=("Consolas", 24), text="VDOT ft'-in.ches\"",
+                                command=lambda: self.button_click(
+                                    "vdotftinches.py"),
+                                fg_color="#F47735", hover_color="#005DAA").pack(fill="both", padx=2, pady=2)
         button3 = cnt.CTkButton(master=self, font=(
+            "Consolas", 24), text="AISC Shapes Lookup", command=lambda: self.button_click("aisclookup2.py")).pack(fill="both", padx=2, pady=2)
+        button4 = cnt.CTkButton(master=self, font=(
             "Consolas", 24), text="Lookup AISC Shape by Property", command=lambda: self.button_click("aiscbyproperty.py")).pack(fill="both", padx=2, pady=2)
         button5 = cnt.CTkButton(master=self, font=(
             "Consolas", 24), text="Unit Converter", command=lambda: self.button_click("unitconverter2.py")).pack(fill="both", padx=2, pady=2)

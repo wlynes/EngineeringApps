@@ -1,4 +1,3 @@
-#!C:\Users\wlyne\.EngApps\Scripts\python
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
@@ -13,7 +12,7 @@ class App(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
 
-        self.title("Feet and Inches Converter")
+        self.title("Freedom Converter")
         ctk.set_default_color_theme("blue")
         ctk.set_appearance_mode("dark")
         self.iconbitmap(r"images\Will-High.ico")
@@ -27,16 +26,26 @@ class TabHolder(ctk.CTkTabview):
 
         self.tab1 = self.add("Decimal ft -> ft\'-in\"")
         self.tab2 = self.add("ft\'-in\" -> Decimal ft")
+        self.tab3 = self.add("VDOT Decimal to ft\'-in.ches\"")
+        self.tab4 = self.add("VDOT ft\'-in.ches\" -> Decimal")
 
         self.tab1_entry = ctk.StringVar(value="{:.8f}".format(10. * random()))
         self.tab1_result = ctk.StringVar()
         self.selected_precision = ctk.StringVar()
+
+        self.tab3_entry = ctk.StringVar(value="{:8f}".format(10. * random()))
+        self.tab3_result = ctk.StringVar()
+
+        self.tab4_entry = ctk.StringVar()
+        self.tab4_result = ctk.StringVar()
 
         self.tab2_entry = ctk.StringVar()
         self.tab2_result = ctk.StringVar()
 
         self.build_tab1()
         self.build_tab2()
+        self.build_tab3()
+        self.build_tab4()
 
     def build_tab1(self):
         precision_options = [0, 2, 4, 8, 16, 32, 64, 128]
@@ -135,8 +144,73 @@ class TabHolder(ctk.CTkTabview):
                 inches += numerator / denominator
         self.tab2_result.set("{:6f}".format(feet + inches / 12))
 
-    # # Add the feet and inches to get the total distance in decimal feet
-    # return feet + inches / 12
+    def build_tab3(self):
+        input_label = ctk.CTkLabel(self.tab3, text="Enter a value in decimal feet:",
+                                   font=("Consolas", 18)).pack(fill="x")
+        self.tab3_entrbx = ctk.CTkEntry(
+            self.tab3, textvariable=self.tab3_entry, font=(
+                "Consolas", 18)).pack(fill="x")
+
+        conv_button = ctk.CTkButton(self.tab3, text="CONVERT",
+                                    font=("Consolas", 18), command=self.tab3_click,
+                                    fg_color="#F47735").pack(
+            fill="x", padx=2, pady=10)
+
+        self.output_entry = ctk.CTkEntry(self.tab3, textvariable=self.tab3_result,
+                                         font=("Consolas", 22), state="readonly").pack(
+            fill="x", padx=2, pady=10)
+
+    def tab3_click(self):
+        inp = float(self.tab3_entry.get())
+
+        # Convert to feet and inches
+        feet = int(inp)
+        inches = (inp - feet) * 12
+
+        # Build the output string
+        output = "{}'-{:.4f}\"".format(feet, inches)
+
+        # Set the output string in the text box
+        self.tab3_result.set(output)
+
+    def build_tab4(self):
+        input_label = ctk.CTkLabel(
+            self.tab4, text="Enter a value in ft'-in.ches\":", font=("Consolas", 18)).pack(fill="x")
+
+        self.tab4_entrbx = ctk.CTkEntry(
+            self.tab4, textvariable=self.tab4_entry, font=("Consolas", 18)).pack(fill="x")
+
+        calc_button = ctk.CTkButton(self.tab4, text="CONVERT", font=("Consolas", 18),
+                                    command=self.tab4_click,
+                                    fg_color="#F47735").pack(fill="x", padx=2, pady=10)
+
+        self.output_entry = ctk.CTkEntry(self.tab4, textvariable=self.tab4_result, font=(
+            "Consolas", 22), state="readonly").pack(fill="x", padx=2, pady=10)
+
+    def tab4_click(self):
+        # Valid formats:    a'-b.cdefghi"  --OR--    a' b.cdefghi"
+        value = self.tab4_entry.get()
+
+        # Look for feet and inches delimiters
+        for dd in [" ", "-"]:
+            if dd in value:
+                parts = value.split(dd)
+                if len(parts) > 2:
+                    self.tab4_result.set("Error - too many parts")
+                else:
+                    feet, inches = parts
+
+                # look for ' and " markers
+                if "'" in feet:
+                    feet = feet[:-1]
+
+                if '"' in inches:
+                    inches = inches[:-1]
+
+                # Convert to double float, decimal feet
+                decimal = float(feet) + float(inches) / 12.
+
+                self.tab4_result.set("{:6f}\'".format(decimal))
 
 
 def main():

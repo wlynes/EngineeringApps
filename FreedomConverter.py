@@ -9,7 +9,20 @@ from tkinter import messagebox
 
 
 class App(ctk.CTk):
+    """Freedom Converter
+       version 0.1.0 2023-04-17 William J. Lynes, P.E.
+       A small application that converts various
+       display forms of Imperial units dimensions.
+
+
+
+    Args:
+        ctk (_type_): _description_
+    """
+
     def __init__(self) -> None:
+        """
+        """
         super().__init__()
 
         self.title("Freedom Converter")
@@ -211,6 +224,14 @@ class TabHolder(ctk.CTkTabview):
                 decimal = float(feet) + float(inches) / 12.
 
                 self.tab4_result.set("{:6f}\'".format(decimal))
+
+
+# class CreateMathcad:
+#     def __init__(self, in_string: str, eng_style:str):
+#         self.in_string = in_string
+#         self.eng_style = eng_style
+
+#     def wjl_format(self):
 
 
 def main():
